@@ -5,7 +5,7 @@
 
     <!-- 🔹 메인 컨텐츠 영역 (동적 라우팅) -->
     <!-- 라우트 경로가 /login이면 container 제거 -->
-    <main :class="['flex-1 p-4', route.path !== '/login' ? 'container mx-auto' : '']">
+    <main :class="['flex-1 p-4', (route.path !== '/login' && route.path !== '/signup') ? 'container mx-auto' : '']">
       <router-view />
     </main>
 

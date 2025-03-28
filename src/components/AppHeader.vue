@@ -23,7 +23,7 @@
     <div v-else>
       <div class="flex gap-2 ml-4">
         <Button label="로그인" text as="router-link" to="/login" rounded></Button>
-        <Button label="회원가입" to="/login" rounded></Button>
+        <Button label="회원가입" as="router-link" to="/signup" rounded></Button>
       </div>
     </div>
   </div>
