@@ -13,16 +13,27 @@
       <li><a class="text-surface-900 dark:text-surface-0 text-xl">Home</a></li>
       <li><a class="text-xl">Events</a></li>
     </ul>
-    <div class="flex gap-2 ml-4">
-      <Button label="로그인" text as="router-link" to="/login" rounded></Button>
-      <Button label="회원가입" to="/login" rounded></Button>
+    <div v-if="auth.isLoggedIn">
+      <div class="flex gap-2 ml-4">
+      <!-- 로그인 상태에 따라 버튼 변경 -->
+        <Button label="마이페이지" text as="router-link" to="/mypage" rounded></Button>
+        <Button label="로그아웃" @click="auth.logout(); router.push('/login')" rounded ></Button>
+      </div>
+    </div>
+    <div v-else>
+      <div class="flex gap-2 ml-4">
+        <Button label="로그인" text as="router-link" to="/login" rounded></Button>
+        <Button label="회원가입" to="/login" rounded></Button>
+      </div>
     </div>
   </div>
 </div>
-
 </template>
   
 <script setup>
+  import { useAuthStore } from '@/stores/auth.ts'
 
+const auth = useAuthStore()
+  
 </script>
   

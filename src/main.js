@@ -1,4 +1,6 @@
 import { createApp } from 'vue'
+import { createPinia } from 'pinia'
+
 import App from './App.vue';
 import router from './router' // ✅ 라우터 추가!
 import './assets/main.css' //  Tailwind 스타일을 불러옴!
@@ -9,6 +11,8 @@ import StyleClass from 'primevue/styleclass'
 
 
 const app = createApp(App);
+const pinia = createPinia(); // ✅ Pinia 추가!
+app.use(pinia)
 app.component('Button', Button)
 app.directive('styleclass', StyleClass)
 app.use(PrimeVue, {

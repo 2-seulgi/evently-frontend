@@ -32,7 +32,6 @@
                         <!--<label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Password</label>-->
                         <Password id="password1" v-model="password" placeholder="Password" :toggleMask="true" class="mb-3" fluid :feedback="false"></Password>
 
-
                         <div class="flex items-center justify-between mt-2 mb-8 gap-8">
                             <div class="flex items-center">
                                 <Checkbox v-model="checked" id="rememberme1" binary class="mr-2"></Checkbox>
@@ -64,22 +63,27 @@
   <script setup>
   import { ref } from 'vue'
   import { useRouter } from 'vue-router'
+  import { useAuthStore } from '@/stores/auth.ts'
+
+  const auth = useAuthStore()
   
   const email = ref('')
   const password = ref('')
   const router = useRouter()
   
+  // 로그인 함수
   const login = async () => {
+    // fetch를 이용해 서버에 로그인 요청
     const res = await fetch('http://localhost:8080/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ userId: email.value.trim(), password: password.value })
     })
+    // 응답 데이터를 JSON으로 변환
     const data = await res.json()
     if (data.token) {
-      localStorage.setItem('token', data.token)
-      localStorage.setItem('role', data.role); // 역할 저장해두기
-      router.push('/')
+        auth.login(data.token, data.role) // 여기서 전역 상태 관리자에 로그인 정보 저장
+        router.push('/')
     } else {
       alert('로그인 실패')
     }
