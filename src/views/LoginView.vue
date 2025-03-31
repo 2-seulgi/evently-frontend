@@ -32,6 +32,7 @@
                         <!--<label for="password1" class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Password</label>-->
                         <Password id="password1" v-model="password" placeholder="Password" :toggleMask="true" class="mb-3" fluid :feedback="false"></Password>
 
+
                         <div class="flex items-center justify-between mt-2 mb-8 gap-8">
                             <div class="flex items-center">
                                 <Checkbox v-model="checked" id="rememberme1" binary class="mr-2"></Checkbox>
@@ -82,7 +83,7 @@
     // 응답 데이터를 JSON으로 변환
     const data = await res.json()
     if (data.token) {
-        auth.login(data.token, data.role) // 여기서 전역 상태 관리자에 로그인 정보 저장
+        auth.login(data.token, data.role, data.userSn) // 여기서 전역 상태 관리자에 로그인 정보 저장
         router.push('/')
     } else {
       alert('로그인 실패')

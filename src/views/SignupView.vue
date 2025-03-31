@@ -29,7 +29,7 @@
             <!-- 🔒 비밀번호 -->
             <div class="flex flex-col gap-2 mb-6">
                 <label for="password" class="font-medium">비밀번호</label>
-                <Password id="password" v-model="password" placeholder="비밀번호" class="w-full md:w-[30rem]" :toggleMask="true" :feedback="false" />
+                <Password id="password" v-model="password" placeholder="비밀번호" class="w-full md:w-[30rem]" :toggleMask="true" fluid :feedback="false" />
             </div>
 
             <Button label="회원가입" class="w-full md:w-[30rem]" @click="signup" ></Button>
@@ -67,7 +67,7 @@
             return
         }
 
-        const res = await fetch(`http://localhost:8080/auth/check-email?userId=${email.value}`)
+        const res = await fetch(`http://localhost:8080/auth/check-email?email=${email.value}`)
         const data = await res.json()
 
         if (data.duplicate) {
