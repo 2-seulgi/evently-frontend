@@ -14,10 +14,11 @@
       <li><a class="text-xl">Events</a></li>
     </ul>
     <div v-if="auth.isLoggedIn">
-      <div class="flex gap-2 ml-4">
-      <!-- 로그인 상태에 따라 버튼 변경 -->
+      <div class="flex items-center gap-3 ml-4">
+        <!-- 로그인 상태에 따라 버튼 변경 -->
+        <span class="text-primary "> 💰 {{ auth.point }}P</span>
         <Button label="마이페이지" text as="router-link" to="/mypage" rounded></Button>
-        <Button label="로그아웃" @click="auth.logout(); router.push('/login')" rounded ></Button>
+        <Button label="로그아웃" @click="handleLogout" rounded />
       </div>
     </div>
     <div v-else>
@@ -32,8 +33,19 @@
   
 <script setup>
   import { useAuthStore } from '@/stores/auth.ts'
+  import { useRouter } from 'vue-router'
 
-const auth = useAuthStore()
+  const auth = useAuthStore()
+  const router = useRouter() 
+  
+  const handleLogout = () => {
+    auth.logout()
+    if (router.currentRoute.value.path === '/mypage') {
+      router.push('/')  // 메인으로 보내기
+    } else {
+      router.push('/login')  // 일반적인 경우
+    }
+  }
   
 </script>
   

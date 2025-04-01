@@ -68,6 +68,7 @@
 
   const auth = useAuthStore()
   
+  const checked = ref(false)
   const email = ref('')
   const password = ref('')
   const router = useRouter()
@@ -82,8 +83,9 @@
     })
     // 응답 데이터를 JSON으로 변환
     const data = await res.json()
+    console.log('🟢 로그인 응답:', data);
     if (data.token) {
-        auth.login(data.token, data.role, data.userSn) // 여기서 전역 상태 관리자에 로그인 정보 저장
+        auth.login(data.token, data.role, data.userId, data.userName, data.userSn)
         router.push('/')
     } else {
       alert('로그인 실패')
