@@ -11,7 +11,7 @@
   >
     <ul class="flex gap-8 list-none p-0 m-0 items-center">
       <li><a class="text-surface-900 dark:text-surface-0 text-xl">Home</a></li>
-      <li><a class="text-xl">Events</a></li>
+      <li><RouterLink to="/events" class="text-xl">Events</RouterLink></li>
     </ul>
     <div v-if="auth.isLoggedIn">
       <div class="flex items-center gap-3 ml-4">
