@@ -16,7 +16,7 @@
     <div v-if="auth.isLoggedIn">
       <div class="flex items-center gap-3 ml-4">
         <!-- 로그인 상태에 따라 버튼 변경 -->
-        <span class="text-primary "> 💰 {{ auth.point }}P</span>
+        <span class="text-primary "> 💰 {{ auth.points }}P</span>
         <Button label="마이페이지" text as="router-link" to="/mypage" rounded></Button>
         <Button label="로그아웃" @click="handleLogout" rounded />
       </div>
@@ -34,6 +34,7 @@
 <script setup>
   import { useAuthStore } from '@/stores/auth.ts'
   import { useRouter } from 'vue-router'
+  import { onMounted } from 'vue'
 
   const auth = useAuthStore()
   const router = useRouter() 
@@ -46,6 +47,12 @@
       router.push('/login')  // 일반적인 경우
     }
   }
+
+  onMounted(() => {
+  if (auth.token) {
+    auth.getPoint()
+  }
+})
   
 </script>
   

@@ -31,7 +31,7 @@ export const useAuthStore = defineStore('auth', {
     },
     async getPoint() {
       if (!this.token) return;
-      const response = await fetch('http://localhost:8080/api/users/point', {
+      const response = await fetch('http://localhost:8080/api/users/points', {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${this.token}`
@@ -39,7 +39,7 @@ export const useAuthStore = defineStore('auth', {
       })
       if (response.ok) {
         const data = await response.json()
-        this.point = data.point   
+        this.points = data.point   
       }     
     },
     logout() {

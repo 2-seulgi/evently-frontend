@@ -38,14 +38,25 @@
       bodyStyle="text-align: justify"
     >
       <template #body="{ data }">
-        <RouterLink :to="`/event/${data.id}`">
+        <div class="flex justify-center">
+        <Button
+        v-if="eventTypeMeta[data.eventType].mode === 'click'"
+          label="출석체크"
+          icon="pi pi-sign-in"
+          class="p-button-sm p-button-outlined p-button-success"
+          :disabled="new Date(data.endDate) < new Date() || participatedEvents.includes(data.id)"
+          @click="handleCheckIn(data.id)"
+        />
+        <RouterLink v-else :to="`/events/${data.id}`">
           <Button
+            v-if="data.eventType !== 'CHECKIN'"
             label="참여"
             icon="pi pi-sign-in"
             class="p-button-sm p-button-text p-button-primary"
             :disabled="new Date(data.endDate) < new Date()" 
           />
         </RouterLink>
+        </div>
       </template>
     </Column>
 
@@ -75,17 +86,71 @@ const formatDate = (dateStr) => {
 }
 
 const eventTypeMeta = {
-  QUIZ:     { label: '퀴즈', icon: 'pi pi-question-circle', severity: 'info' },
-  SURVEY:   { label: '설문조사', icon: 'pi pi-comments', severity: 'success' },
-  PROMOTION:{ label: '프로모션', icon: 'pi pi-bolt', severity: 'warning' },
-  GIVEAWAY: { label: '이벤트 경품', icon: 'pi pi-gift', severity: 'danger' },
-  OTHER:    { label: '기타', icon: 'pi pi-ellipsis-h', severity: 'secondary' }
+  QUIZ:     { label: '퀴즈', icon: 'pi pi-question-circle', severity: 'info', mode: 'route' },
+  SURVEY:   { label: '설문조사', icon: 'pi pi-comments', severity: 'success' , mode: 'route'},
+  PROMOTION:{ label: '프로모션', icon: 'pi pi-bolt', severity: 'warning' , mode: 'route'},
+  GIVEAWAY: { label: '이벤트 경품', icon: 'pi pi-gift', severity: 'danger', mode: 'route' },
+  CHECKIN: { label: '출석체크', icon: 'pi pi-calendar', severity: 'contrast' , mode: 'click' },
+  OTHER:    { label: '기타', icon: 'pi pi-ellipsis-h', severity: 'secondary', mode: 'route' }
 }
 
 onMounted(async () => {
   const res = await fetch('http://localhost:8080/events?page=1&size=10')
   const data = await res.json()
   events.value = data.content
+  
+} )
+
+onMounted(async() =>{
+  const token = localStorage.getItem('token')
+  if (token) {
+    const res = await fetch('http://localhost:8080/users/me/participations/checkin/today', {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    const data = await res.json()
+    participatedEvents.value = data.map(event => event.eventId) // 오늘 출석 이벤트 ID 리스트
+  }
 })
+
+const participatedEvents = ref([]) // ✅ 오늘 출석한 이벤트 ID 리스트
+
+const handleCheckIn = async (eventId) => {
+  const token = localStorage.getItem('token')
+  if (!token) {
+    alert('로그인이 필요합니다. 로그인 페이지로 이동합니다.')
+    window.location.href = '/login'
+    return
+  }
+
+  try {
+    const res = await fetch(`http://localhost:8080/events/${eventId}/participation`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
+      }
+    })
+
+    console.log("res.status =", res.status)
+
+    if (!res.ok) throw new Error('참여 실패')
+
+    const result = await res.json()
+    console.log("✅ result =", result)
+
+    participatedEvents.value.push(eventId) // 버튼 비활성화를 위한 처리
+
+    // ✅ 포인트 갱신: getPoint 호출!
+    await authStore.getPoint()
+    
+    alert(`출석체크 완료! +${result.pointReward}P`)
+  } catch (err) {
+    console.error("❌ 참여 실패", err)
+    alert('출석체크 실패nn')
+  }
+}
+
 </script>
 
