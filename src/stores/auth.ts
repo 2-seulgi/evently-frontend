@@ -4,18 +4,26 @@ import { defineStore } from 'pinia'
 // import { defineStore } from 'pinia'
 export const useAuthStore = defineStore('auth', {
   state: () => ({
-    token: localStorage.getItem('token'),
-    role: localStorage.getItem('role'),
-    userId: localStorage.getItem('userId'),      // 추가
-    userName: localStorage.getItem('userName'),   // 추가
-    userSn: localStorage.getItem('userSn'),
-    point : 0
+    token: null,
+    role: null,
+    userId: null,
+    userName: null,
+    userSn: null,
+    point: 0
   }),
   getters: {
     isLoggedIn: (state) => !!state.token
   },
   actions: {
-    login(token, role, userId, userName, userSn) {
+    initFromStorage() {
+      this.token = localStorage.getItem('token')
+      this.role = localStorage.getItem('role')
+      this.userId = localStorage.getItem('userId')
+      this.userName = localStorage.getItem('userName')
+      this.userSn = localStorage.getItem('userSn')
+    },
+
+    async login(token, role, userId, userName, userSn) {
       this.token = token
       this.role = role
       this.userId = userId
@@ -27,6 +35,8 @@ export const useAuthStore = defineStore('auth', {
       localStorage.setItem('userId', userId)
       localStorage.setItem('userName', userName)
       localStorage.setItem('userSn', userSn)
+      
+      await this.getPoint()
 
     },
     async getPoint() {
@@ -39,7 +49,7 @@ export const useAuthStore = defineStore('auth', {
       })
       if (response.ok) {
         const data = await response.json()
-        this.points = data.point   
+        this.points = data.points 
       }     
     },
     logout() {

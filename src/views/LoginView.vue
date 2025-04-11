@@ -83,7 +83,6 @@
     })
     // 응답 데이터를 JSON으로 변환
     const data = await res.json()
-    console.log('🟢 로그인 응답:', data);
     if (data.token) {
         auth.login(data.token, data.role, data.userId, data.userName, data.userSn)
         router.push('/')

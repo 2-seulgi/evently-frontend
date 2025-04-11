@@ -11,14 +11,16 @@ import Button from 'primevue/button'
 import StyleClass from 'primevue/styleclass'
 import 'primeicons/primeicons.css'
 
+import { useAuthStore } from '@/stores/auth' 
+
 
 
 const app = createApp(App);
 const pinia = createPinia(); // ✅ Pinia 추가!
 app.use(pinia)
-app.component('Button', Button)
-app.directive('styleclass', StyleClass)
-app.component('DataTable', DataTable)
+const auth = useAuthStore()
+auth.initFromStorage()
+
 app.use(PrimeVue, {
     // Default theme configuration
     theme: {
@@ -31,4 +33,9 @@ app.use(PrimeVue, {
     }
  })
 .use(router) // ✅ 라우터 추가!
+
+app.component('Button', Button)
+app.directive('styleclass', StyleClass)
+app.component('DataTable', DataTable)
+
 .mount('#app');

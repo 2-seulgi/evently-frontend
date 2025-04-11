@@ -71,6 +71,9 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useAuthStore } from '@/stores/auth' // ✅ auth store import
+const authStore = useAuthStore()             // ✅ store 인스턴스 생성
+
 
 const events = ref([])
 const expandedRows = ref([])
@@ -148,7 +151,7 @@ const handleCheckIn = async (eventId) => {
     alert(`출석체크 완료! +${result.pointReward}P`)
   } catch (err) {
     console.error("❌ 참여 실패", err)
-    alert('출석체크 실패nn')
+    alert('출석체크 실패')
   }
 }
 
