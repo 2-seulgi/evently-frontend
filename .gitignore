@@ -4,6 +4,7 @@ package-lock.json
 
 # 환경 설정 파일
 .env
+.env.*
 dist/
 .vite
 .vscode/

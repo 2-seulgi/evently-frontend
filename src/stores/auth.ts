@@ -43,7 +43,7 @@ export const useAuthStore = defineStore('auth', {
     },
     async getPoint() {
       if (!this.token) return
-      const { request } = useApi(this.token) // 🔥 여기서 토큰 주입!
+      const { request } = useApi(this.token) //  토큰 주입!
 
       const response = await request('/api/users/points', {
         headers: {
