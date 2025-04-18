@@ -72,9 +72,10 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useAuthStore } from '@/stores/auth' // ✅ auth store import
+import { useApi } from '@/utils/useApi' // useApi 가져오기
 const authStore = useAuthStore()             // ✅ store 인스턴스 생성
 
-
+const { request } = useApi()
 const events = ref([])
 const expandedRows = ref([])
 
@@ -98,7 +99,7 @@ const eventTypeMeta = {
 }
 
 onMounted(async () => {
-  const res = await fetch('http://localhost:8080/events?page=1&size=10')
+  const res = await request('/events?page=1&size=10')
   const data = await res.json()
   events.value = data.content
   
@@ -107,7 +108,7 @@ onMounted(async () => {
 onMounted(async() =>{
   const token = localStorage.getItem('token')
   if (token) {
-    const res = await fetch('http://localhost:8080/users/me/participations/checkin/today', {
+    const res = await request('/users/me/participations/checkin/today', {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -128,7 +129,7 @@ const handleCheckIn = async (eventId) => {
   }
 
   try {
-    const res = await fetch(`http://localhost:8080/events/${eventId}/participation`, {
+    const res = await request(`/events/${eventId}/participation`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

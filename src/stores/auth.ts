@@ -1,6 +1,8 @@
 // src/stores/auth.js
 
 import { defineStore } from 'pinia'
+import { useApi } from '@/utils/useApi' // useApi 가져오기
+
 // import { defineStore } from 'pinia'
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -40,8 +42,10 @@ export const useAuthStore = defineStore('auth', {
 
     },
     async getPoint() {
-      if (!this.token) return;
-      const response = await fetch('http://localhost:8080/api/users/points', {
+      if (!this.token) return
+      const { request } = useApi(this.token) // 🔥 여기서 토큰 주입!
+
+      const response = await request('/api/users/points', {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${this.token}`

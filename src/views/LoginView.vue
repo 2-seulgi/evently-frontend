@@ -65,9 +65,10 @@
   import { ref } from 'vue'
   import { useRouter } from 'vue-router'
   import { useAuthStore } from '@/stores/auth.ts'
+  import { useApi } from '@/utils/useApi' // useApi 가져오기
 
   const auth = useAuthStore()
-  
+  const { request } = useApi()
   const checked = ref(false)
   const email = ref('')
   const password = ref('')
@@ -76,7 +77,7 @@
   // 로그인 함수
   const login = async () => {
     // fetch를 이용해 서버에 로그인 요청
-    const res = await fetch('http://localhost:8080/auth/login', {
+    const res = await request('/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ userId: email.value.trim(), password: password.value })

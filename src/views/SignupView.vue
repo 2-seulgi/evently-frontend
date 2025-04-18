@@ -43,7 +43,9 @@
   <script setup>
   import { ref } from 'vue'
   import { useRouter } from 'vue-router'
+  import { useApi } from '@/utils/useApi' // useApi 가져오기
   
+  const { request } = useApi()
   const email = ref('')
   const name = ref('')
   const password = ref('')
@@ -67,7 +69,7 @@
             return
         }
 
-        const res = await fetch(`http://localhost:8080/auth/check-email?email=${email.value}`)
+        const res = await request(`/auth/check-email?email=${email.value}`)
         const data = await res.json()
 
         if (data.duplicate) {
@@ -102,7 +104,7 @@
             return
         }
 
-        const res = await fetch('http://localhost:8080/auth', {
+        const res = await request('/auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
