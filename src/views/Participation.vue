@@ -129,7 +129,7 @@ const handleCheckIn = async (eventId) => {
   }
 
   try {
-    const res = await request(`/users/me/participation/${eventId}`, {
+    const res = await request(`/events/${eventId}/participation`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -137,9 +137,12 @@ const handleCheckIn = async (eventId) => {
       }
     })
 
+    console.log("res.status =", res.status)
+
     if (!res.ok) throw new Error('참여 실패')
 
     const result = await res.json()
+    console.log("✅ result =", result)
 
     participatedEvents.value.push(eventId) // 버튼 비활성화를 위한 처리
 

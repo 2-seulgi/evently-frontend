@@ -23,7 +23,7 @@ export function useApi(token) {
       })
   
       // ✅ 만료된 토큰 처리
-      if (res.status === 401) {
+      if (res.status === 401 || res.status === 403) {
         alert('로그인이 만료되었습니다. 다시 로그인해주세요.')
         auth?.logout?.() // auth가 있을 때만 실행
         router.push('/login')

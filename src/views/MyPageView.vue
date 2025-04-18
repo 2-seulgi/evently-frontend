@@ -7,7 +7,7 @@
         <h3 class="text-xl font-semibold mb-4">내 정보</h3>
         <p><strong>이메일:</strong> {{ user.email }}</p>
         <p><strong>이름:</strong> {{ user.name }}</p>
-        <p><strong>보유 포인트:</strong> <span class="text-primary">{{ point }}P</span></p>
+        <p><strong>보유 포인트:</strong> <span class="text-primary">{{ auth.points }}P</span></p>
       </div>
   
       <!-- 🔹 카드 영역: 포인트 내역 / 이벤트 참여 내역 등 -->
@@ -45,22 +45,9 @@ const user = {
 
 const point = ref(0)
 
-onMounted(async () => {
-  const token = localStorage.getItem('token')
-  if (!token) return
-
-  try {
-    const res = await request('/api/users/points', {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-
-    point.value = await res.json()
-  } catch (err) {
-    console.warn('포인트 불러오기 실패 또는 토큰 만료:', err)
-    // 여기선 굳이 alert이나 redirect 안 해도 됨.
-    // useApi 내부에서 401 처리를 해주기 때문!
+onMounted(() => {
+  if (auth.token) {
+    auth.getPoint()
   }
 })
 
